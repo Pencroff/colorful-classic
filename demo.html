@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Colorful Classic — Theme Demo</title>
+<style>
+  :root {
+    --background: #111;
+    --surface: #1a1a1a;
+    --elevated: #1f1f1f;
+    --border: #333;
+    --text: #ddd;
+    --text-muted: #888;
+    --accent: #e4a91f;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--background);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+  }
+  header {
+    padding: 24px 32px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 { margin: 0 0 4px; font-size: 22px; color: var(--accent); }
+  header .meta { color: var(--text-muted); font-size: 13px; }
+
+  main { padding: 24px 32px; display: flex; flex-direction: column; gap: 32px; }
+
+  .theme-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .theme-block h2 { margin: 0 0 4px; font-size: 18px; }
+  .theme-block .appearance {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: var(--elevated);
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .section { margin-top: 20px; }
+  .section h3 {
+    margin: 0 0 10px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 8px;
+  }
+  .swatch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 12px;
+  }
+  .swatch .chip {
+    width: 28px; height: 28px;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.1);
+    flex-shrink: 0;
+    background-image:
+      linear-gradient(45deg, #444 25%, transparent 25%),
+      linear-gradient(-45deg, #444 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #444 75%),
+      linear-gradient(-45deg, transparent 75%, #444 75%);
+    background-size: 8px 8px;
+    background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+  }
+  .swatch .chip span {
+    display: block;
+    width: 100%; height: 100%;
+    border-radius: 3px;
+  }
+  .swatch .label {
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .swatch .label .name {
+    color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .swatch .label .hex {
+    color: var(--text-muted);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px;
+  }
+
+  .accents-row {
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .accent-pill {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.1);
+  }
+
+  .ui-mock {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    grid-template-rows: 32px 1fr 24px;
+    height: 360px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 12px;
+  }
+  .ui-titlebar {
+    grid-column: 1 / -1;
+    display: flex; align-items: center;
+    padding: 0 12px;
+    gap: 8px;
+  }
+  .ui-titlebar .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+  .ui-panel { padding: 12px; overflow: hidden; }
+  .ui-panel .file {
+    padding: 4px 8px; border-radius: 4px;
+    margin-bottom: 2px;
+    cursor: default;
+  }
+  .ui-editor {
+    padding: 12px 16px;
+    overflow: auto;
+    white-space: pre;
+    line-height: 1.55;
+  }
+  .ui-statusbar {
+    grid-column: 1 / -1;
+    display: flex; align-items: center;
+    padding: 0 12px;
+    font-size: 11px;
+  }
+
+  .code { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+
+  .error-msg {
+    padding: 16px;
+    background: #4a1414;
+    border: 1px solid #f34f44;
+    border-radius: 6px;
+    color: #ffb3b3;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1 id="theme-name">Loading…</h1>
+  <div class="meta" id="theme-meta"></div>
+</header>
+<main id="main"></main>
+
+<script>
+const UI_KEYS = [
+  "background", "surface.background", "elevated_surface.background",
+  "border", "border.focused",
+  "text", "text.muted", "text.accent",
+  "element.background", "element.hover", "element.selected",
+  "tab.active_background", "tab.inactive_background",
+  "title_bar.background", "status_bar.background",
+  "editor.background", "editor.foreground", "editor.gutter.background",
+  "editor.line_number", "editor.active_line.background",
+  "error", "warning", "success", "info", "hint",
+  "created", "modified", "deleted", "renamed"
+];
+
+const SAMPLE_CODE = [
+  { tok: "comment",  text: "// Demo: theme syntax preview\n" },
+  { tok: "keyword",  text: "import" }, { tok: "punctuation", text: " { " },
+  { tok: "variable", text: "createTheme" }, { tok: "punctuation", text: " } " },
+  { tok: "keyword",  text: "from" }, { tok: "punctuation", text: " " },
+  { tok: "string",   text: "\"./theme\"" }, { tok: "punctuation.delimiter", text: ";\n\n" },
+
+  { tok: "keyword",  text: "export const " },
+  { tok: "constant", text: "MAX_ITEMS" }, { tok: "operator", text: " = " },
+  { tok: "number",   text: "42" }, { tok: "punctuation.delimiter", text: ";\n\n" },
+
+  { tok: "keyword.function", text: "function " },
+  { tok: "function", text: "greet" },
+  { tok: "punctuation.bracket", text: "(" },
+  { tok: "variable.parameter", text: "name" },
+  { tok: "punctuation", text: ": " },
+  { tok: "type.builtin", text: "string" },
+  { tok: "punctuation.bracket", text: ")" },
+  { tok: "punctuation", text: ": " },
+  { tok: "type.builtin", text: "string" },
+  { tok: "punctuation.bracket", text: " {\n  " },
+
+  { tok: "keyword",  text: "if " },
+  { tok: "punctuation.bracket", text: "(" },
+  { tok: "variable", text: "name" },
+  { tok: "operator", text: " === " },
+  { tok: "string",   text: "\"\"" },
+  { tok: "punctuation.bracket", text: ") " },
+  { tok: "punctuation.bracket", text: "{\n    " },
+
+  { tok: "keyword.return", text: "return " },
+  { tok: "string",   text: "`Hello, stranger!`" },
+  { tok: "punctuation.delimiter", text: ";\n  " },
+  { tok: "punctuation.bracket", text: "}\n  " },
+
+  { tok: "keyword.return", text: "return " },
+  { tok: "string",   text: "`Hello, ${" },
+  { tok: "variable", text: "name" },
+  { tok: "string",   text: "}!`" },
+  { tok: "punctuation.delimiter", text: ";\n" },
+  { tok: "punctuation.bracket", text: "}\n\n" },
+
+  { tok: "keyword",  text: "const " },
+  { tok: "variable", text: "active" },
+  { tok: "operator", text: " = " },
+  { tok: "boolean",  text: "true" },
+  { tok: "punctuation.delimiter", text: ";\n" }
+];
+
+function el(tag, attrs = {}, children = []) {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "style" && typeof v === "object") Object.assign(node.style, v);
+    else if (k === "class") node.className = v;
+    else if (k === "text") node.textContent = v;
+    else node.setAttribute(k, v);
+  }
+  for (const c of [].concat(children)) {
+    if (c) node.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+  }
+  return node;
+}
+
+function swatchEl(name, value) {
+  const chip = el("div", { class: "chip" }, el("span", { style: { background: value } }));
+  const label = el("div", { class: "label" }, [
+    el("span", { class: "name", text: name }),
+    el("span", { class: "hex", text: value })
+  ]);
+  return el("div", { class: "swatch" }, [chip, label]);
+}
+
+function renderUiMock(style) {
+  const get = (k, fallback) => style[k] || fallback;
+
+  const titlebar = el("div", {
+    class: "ui-titlebar",
+    style: {
+      background: get("title_bar.background"),
+      color: get("text"),
+      borderBottom: `1px solid ${get("border")}`
+    }
+  }, [
+    el("div", { class: "dot", style: { background: "#f34f44" } }),
+    el("div", { class: "dot", style: { background: "#e4a91f" } }),
+    el("div", { class: "dot", style: { background: "#30be47" } }),
+    el("span", { style: { marginLeft: "12px", color: get("text.muted") }, text: "demo.ts — Colorful Classic" })
+  ]);
+
+  const fileList = ["src/", "  index.ts", "  theme.ts", "  utils.ts", "package.json", "README.md"];
+  const panel = el("div", {
+    class: "ui-panel",
+    style: {
+      background: get("panel.background", get("surface.background")),
+      color: get("text"),
+      borderRight: `1px solid ${get("border")}`
+    }
+  }, fileList.map((f, i) => el("div", {
+    class: "file",
+    style: i === 1 ? {
+      background: get("element.selected"),
+      color: get("text.accent")
+    } : { color: get("text.muted") },
+    text: f
+  })));
+
+  const editor = el("div", {
+    class: "ui-editor",
+    style: {
+      background: get("editor.background"),
+      color: get("editor.foreground")
+    }
+  });
+
+  const syntax = style.syntax || {};
+  for (const piece of SAMPLE_CODE) {
+    const def = syntax[piece.tok] || {};
+    const span = document.createElement("span");
+    span.textContent = piece.text;
+    if (def.color) span.style.color = def.color;
+    if (def.font_style) span.style.fontStyle = def.font_style;
+    if (def.font_weight) span.style.fontWeight = def.font_weight;
+    editor.appendChild(span);
+  }
+
+  const statusbar = el("div", {
+    class: "ui-statusbar",
+    style: {
+      background: get("status_bar.background"),
+      color: get("text.muted"),
+      borderTop: `1px solid ${get("border")}`
+    }
+  }, [
+    el("span", { style: { color: get("success") }, text: "● main" }),
+    el("span", { style: { marginLeft: "12px" }, text: "TypeScript" }),
+    el("span", { style: { marginLeft: "auto", color: get("text.accent") }, text: "Ln 8, Col 12" })
+  ]);
+
+  return el("div", { class: "ui-mock" }, [titlebar, panel, editor, statusbar]);
+}
+
+function renderTheme(theme) {
+  const block = el("div", { class: "theme-block" });
+  block.appendChild(el("h2", { text: theme.name }));
+  block.appendChild(el("span", { class: "appearance", text: theme.appearance || "—" }));
+
+  const style = theme.style || {};
+
+  const uiSection = el("div", { class: "section" }, [
+    el("h3", { text: "Editor & UI Preview" }),
+    renderUiMock(style)
+  ]);
+  block.appendChild(uiSection);
+
+  if (Array.isArray(style.accents) && style.accents.length) {
+    const row = el("div", { class: "accents-row" },
+      style.accents.map(c => el("div", {
+        class: "accent-pill",
+        style: { background: c },
+        title: c
+      }))
+    );
+    block.appendChild(el("div", { class: "section" }, [
+      el("h3", { text: "Accent Palette" }),
+      row
+    ]));
+  }
+
+  const uiSwatches = el("div", { class: "swatches" });
+  for (const key of UI_KEYS) {
+    if (style[key]) uiSwatches.appendChild(swatchEl(key, style[key]));
+  }
+  block.appendChild(el("div", { class: "section" }, [
+    el("h3", { text: "Core UI Colors" }),
+    uiSwatches
+  ]));
+
+  if (style.syntax) {
+    const synSwatches = el("div", { class: "swatches" });
+    for (const [name, def] of Object.entries(style.syntax)) {
+      if (def && def.color) synSwatches.appendChild(swatchEl(name, def.color));
+    }
+    block.appendChild(el("div", { class: "section" }, [
+      el("h3", { text: "Syntax Colors" }),
+      synSwatches
+    ]));
+  }
+
+  if (Array.isArray(style.players) && style.players.length) {
+    const row = el("div", { class: "swatches" },
+      style.players.map((p, i) => swatchEl(`player ${i + 1} cursor`, p.cursor))
+    );
+    block.appendChild(el("div", { class: "section" }, [
+      el("h3", { text: "Players" }),
+      row
+    ]));
+  }
+
+  return block;
+}
+
+async function main() {
+  const main = document.getElementById("main");
+  try {
+    const res = await fetch("colorful-classic.json");
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    document.getElementById("theme-name").textContent = data.name || "Theme";
+    document.getElementById("theme-meta").textContent =
+      `by ${data.author || "unknown"} · ${data.themes?.length || 0} variant(s) · schema ${data["$schema"] || "—"}`;
+    document.title = `${data.name} — Theme Demo`;
+
+    for (const theme of data.themes || []) {
+      main.appendChild(renderTheme(theme));
+    }
+  } catch (err) {
+    main.appendChild(el("div", {
+      class: "error-msg",
+      text: `Failed to load colorful-classic.json: ${err.message}. Serve this folder over HTTP (e.g. \`python3 -m http.server\`) — opening the file:// URL directly will block fetch().`
+    }));
+  }
+}
+main();
+</script>
+</body>
+</html>
