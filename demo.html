@@ -137,12 +137,16 @@
   .ui-titlebar .dot {
     width: 10px; height: 10px; border-radius: 50%;
   }
-  .ui-panel { padding: 12px; overflow: hidden; }
+  .ui-panel { padding: 12px; overflow: auto; }
   .ui-panel .file {
     padding: 4px 8px; border-radius: 4px;
     margin-bottom: 2px;
-    cursor: default;
+    cursor: pointer;
+    white-space: pre;
+    user-select: none;
   }
+  .ui-panel .file.folder { cursor: default; }
+  .ui-panel .file:not(.folder):hover { filter: brightness(1.3); }
   .ui-editor {
     padding: 12px 16px;
     overflow: auto;
@@ -188,54 +192,347 @@ const UI_KEYS = [
   "created", "modified", "deleted", "renamed"
 ];
 
-const SAMPLE_CODE = [
-  { tok: "comment",  text: "// Demo: theme syntax preview\n" },
-  { tok: "keyword",  text: "import" }, { tok: "punctuation", text: " { " },
-  { tok: "variable", text: "createTheme" }, { tok: "punctuation", text: " } " },
-  { tok: "keyword",  text: "from" }, { tok: "punctuation", text: " " },
-  { tok: "string",   text: "\"./theme\"" }, { tok: "punctuation.delimiter", text: ";\n\n" },
+const t = (tok, text) => ({ tok, text });
 
-  { tok: "keyword",  text: "export const " },
-  { tok: "constant", text: "MAX_ITEMS" }, { tok: "operator", text: " = " },
-  { tok: "number",   text: "42" }, { tok: "punctuation.delimiter", text: ";\n\n" },
+const SAMPLES = {
+  "src/index.ts": {
+    lang: "TypeScript",
+    tokens: [
+      t("comment", "// Demo: theme syntax preview\n"),
+      t("keyword", "import"), t("punctuation", " { "),
+      t("variable", "createTheme"), t("punctuation", " } "),
+      t("keyword", "from"), t("punctuation", " "),
+      t("string", "\"./theme\""), t("punctuation.delimiter", ";\n\n"),
+      t("keyword", "export const "),
+      t("constant", "MAX_ITEMS"), t("operator", " = "),
+      t("number", "42"), t("punctuation.delimiter", ";\n\n"),
+      t("keyword.function", "function "),
+      t("function", "greet"),
+      t("punctuation.bracket", "("),
+      t("variable.parameter", "name"),
+      t("punctuation", ": "),
+      t("type.builtin", "string"),
+      t("punctuation.bracket", ")"),
+      t("punctuation", ": "),
+      t("type.builtin", "string"),
+      t("punctuation.bracket", " {\n  "),
+      t("keyword", "if "),
+      t("punctuation.bracket", "("),
+      t("variable", "name"),
+      t("operator", " === "),
+      t("string", "\"\""),
+      t("punctuation.bracket", ") {\n    "),
+      t("keyword.return", "return "),
+      t("string", "`Hello, stranger!`"),
+      t("punctuation.delimiter", ";\n  "),
+      t("punctuation.bracket", "}\n  "),
+      t("keyword.return", "return "),
+      t("string", "`Hello, ${"),
+      t("variable", "name"),
+      t("string", "}!`"),
+      t("punctuation.delimiter", ";\n"),
+      t("punctuation.bracket", "}\n\n"),
+      t("keyword", "const "),
+      t("variable", "active"),
+      t("operator", " = "),
+      t("boolean", "true"),
+      t("punctuation.delimiter", ";\n"),
+    ]
+  },
 
-  { tok: "keyword.function", text: "function " },
-  { tok: "function", text: "greet" },
-  { tok: "punctuation.bracket", text: "(" },
-  { tok: "variable.parameter", text: "name" },
-  { tok: "punctuation", text: ": " },
-  { tok: "type.builtin", text: "string" },
-  { tok: "punctuation.bracket", text: ")" },
-  { tok: "punctuation", text: ": " },
-  { tok: "type.builtin", text: "string" },
-  { tok: "punctuation.bracket", text: " {\n  " },
+  "src/main.py": {
+    lang: "Python",
+    tokens: [
+      t("comment", "# Demo: theme syntax preview\n"),
+      t("keyword", "from"), t("text", " "),
+      t("variable", "dataclasses"), t("text", " "),
+      t("keyword", "import"), t("text", " "),
+      t("variable", "dataclass"), t("text", "\n\n"),
+      t("constant", "MAX_ITEMS"), t("operator", " = "),
+      t("number", "42"), t("text", "\n\n"),
+      t("punctuation.special", "@"), t("function", "dataclass"), t("text", "\n"),
+      t("keyword", "class "), t("type", "Greeter"), t("punctuation", ":\n    "),
+      t("variable", "name"), t("punctuation", ": "),
+      t("type.builtin", "str"), t("operator", " = "),
+      t("string", "\"world\""), t("text", "\n\n    "),
+      t("keyword.function", "def "), t("function.method", "greet"),
+      t("punctuation.bracket", "("), t("variable.parameter", "self"),
+      t("punctuation.bracket", ")"), t("operator", " -> "),
+      t("type.builtin", "str"), t("punctuation", ":\n        "),
+      t("keyword", "if "), t("keyword", "not "),
+      t("variable", "self"), t("punctuation", "."),
+      t("variable", "name"), t("punctuation", ":\n            "),
+      t("keyword.return", "return "),
+      t("string", "\"Hello, stranger!\""), t("text", "\n        "),
+      t("keyword.return", "return "),
+      t("string", "f\"Hello, {"), t("variable", "self"),
+      t("punctuation", "."), t("variable", "name"),
+      t("string", "}!\""), t("text", "\n\n"),
+      t("variable", "active"), t("operator", " = "),
+      t("boolean", "True"), t("text", "\n"),
+    ]
+  },
 
-  { tok: "keyword",  text: "if " },
-  { tok: "punctuation.bracket", text: "(" },
-  { tok: "variable", text: "name" },
-  { tok: "operator", text: " === " },
-  { tok: "string",   text: "\"\"" },
-  { tok: "punctuation.bracket", text: ") " },
-  { tok: "punctuation.bracket", text: "{\n    " },
+  "src/lib.rs": {
+    lang: "Rust",
+    tokens: [
+      t("comment", "// Demo: theme syntax preview\n"),
+      t("keyword", "use "), t("variable", "std"),
+      t("punctuation", "::"), t("variable", "fmt"),
+      t("punctuation.delimiter", ";\n\n"),
+      t("keyword", "pub const "), t("constant", "MAX_ITEMS"),
+      t("punctuation", ": "), t("type.builtin", "u32"),
+      t("operator", " = "), t("number", "42"),
+      t("punctuation.delimiter", ";\n\n"),
+      t("keyword.function", "fn "), t("function", "greet"),
+      t("punctuation.bracket", "("), t("variable.parameter", "name"),
+      t("punctuation", ": "), t("operator", "&"),
+      t("type.builtin", "str"), t("punctuation.bracket", ")"),
+      t("operator", " -> "), t("type", "String"),
+      t("punctuation.bracket", " {\n    "),
+      t("keyword", "if "), t("variable", "name"),
+      t("punctuation", "."), t("function.method", "is_empty"),
+      t("punctuation.bracket", "() {\n        "),
+      t("keyword.return", "return "), t("type", "String"),
+      t("punctuation", "::"), t("function.method", "from"),
+      t("punctuation.bracket", "("),
+      t("string", "\"Hello, stranger!\""),
+      t("punctuation.bracket", ")"),
+      t("punctuation.delimiter", ";\n    "),
+      t("punctuation.bracket", "}\n    "),
+      t("function", "format!"), t("punctuation.bracket", "("),
+      t("string", "\"Hello, {}!\""), t("punctuation.delimiter", ", "),
+      t("variable", "name"), t("punctuation.bracket", ")"),
+      t("text", "\n"),
+      t("punctuation.bracket", "}\n\n"),
+      t("keyword.function", "fn "), t("function", "main"),
+      t("punctuation.bracket", "() {\n    "),
+      t("keyword", "let "), t("variable", "active"),
+      t("operator", " = "), t("boolean", "true"),
+      t("punctuation.delimiter", ";\n    "),
+      t("function", "println!"), t("punctuation.bracket", "("),
+      t("string", "\"{}\""), t("punctuation.delimiter", ", "),
+      t("function", "greet"), t("punctuation.bracket", "("),
+      t("string", "\"world\""), t("punctuation.bracket", "))"),
+      t("punctuation.delimiter", ";\n"),
+      t("punctuation.bracket", "}\n"),
+    ]
+  },
 
-  { tok: "keyword.return", text: "return " },
-  { tok: "string",   text: "`Hello, stranger!`" },
-  { tok: "punctuation.delimiter", text: ";\n  " },
-  { tok: "punctuation.bracket", text: "}\n  " },
+  "src/main.go": {
+    lang: "Go",
+    tokens: [
+      t("comment", "// Demo: theme syntax preview\n"),
+      t("keyword", "package "), t("variable", "main"), t("text", "\n\n"),
+      t("keyword", "import "), t("string", "\"fmt\""), t("text", "\n\n"),
+      t("keyword", "const "), t("constant", "MaxItems"),
+      t("operator", " = "), t("number", "42"), t("text", "\n\n"),
+      t("keyword.function", "func "), t("function", "greet"),
+      t("punctuation.bracket", "("), t("variable.parameter", "name"),
+      t("text", " "), t("type.builtin", "string"),
+      t("punctuation.bracket", ") "), t("type.builtin", "string"),
+      t("punctuation.bracket", " {\n\t"),
+      t("keyword", "if "), t("variable", "name"),
+      t("operator", " == "), t("string", "\"\""),
+      t("punctuation.bracket", " {\n\t\t"),
+      t("keyword.return", "return "),
+      t("string", "\"Hello, stranger!\""), t("text", "\n\t"),
+      t("punctuation.bracket", "}\n\t"),
+      t("keyword.return", "return "), t("variable", "fmt"),
+      t("punctuation", "."), t("function.method", "Sprintf"),
+      t("punctuation.bracket", "("),
+      t("string", "\"Hello, %s!\""), t("punctuation.delimiter", ", "),
+      t("variable", "name"), t("punctuation.bracket", ")"),
+      t("text", "\n"), t("punctuation.bracket", "}\n\n"),
+      t("keyword.function", "func "), t("function", "main"),
+      t("punctuation.bracket", "() {\n\t"),
+      t("variable", "active"), t("operator", " := "),
+      t("boolean", "true"), t("text", "\n\t"),
+      t("variable", "_"), t("operator", " = "),
+      t("variable", "active"), t("text", "\n\t"),
+      t("variable", "fmt"), t("punctuation", "."),
+      t("function.method", "Println"), t("punctuation.bracket", "("),
+      t("function", "greet"), t("punctuation.bracket", "("),
+      t("string", "\"world\""),
+      t("punctuation.bracket", "))"), t("text", "\n"),
+      t("punctuation.bracket", "}\n"),
+    ]
+  },
 
-  { tok: "keyword.return", text: "return " },
-  { tok: "string",   text: "`Hello, ${" },
-  { tok: "variable", text: "name" },
-  { tok: "string",   text: "}!`" },
-  { tok: "punctuation.delimiter", text: ";\n" },
-  { tok: "punctuation.bracket", text: "}\n\n" },
+  "src/index.html": {
+    lang: "HTML",
+    tokens: [
+      t("punctuation.bracket", "<!"), t("tag", "DOCTYPE"),
+      t("text", " "), t("attribute", "html"),
+      t("punctuation.bracket", ">\n"),
+      t("punctuation.bracket", "<"), t("tag", "html"),
+      t("text", " "), t("attribute", "lang"),
+      t("operator", "="), t("string", "\"en\""),
+      t("punctuation.bracket", ">\n  "),
+      t("punctuation.bracket", "<"), t("tag", "head"),
+      t("punctuation.bracket", ">\n    "),
+      t("punctuation.bracket", "<"), t("tag", "meta"),
+      t("text", " "), t("attribute", "charset"),
+      t("operator", "="), t("string", "\"UTF-8\""),
+      t("punctuation.bracket", ">\n    "),
+      t("punctuation.bracket", "<"), t("tag", "title"),
+      t("punctuation.bracket", ">"),
+      t("text", "Theme Demo"),
+      t("punctuation.bracket", "</"), t("tag", "title"),
+      t("punctuation.bracket", ">\n  "),
+      t("punctuation.bracket", "</"), t("tag", "head"),
+      t("punctuation.bracket", ">\n  "),
+      t("punctuation.bracket", "<"), t("tag", "body"),
+      t("punctuation.bracket", ">\n    "),
+      t("punctuation.bracket", "<"), t("tag", "h1"),
+      t("text", " "), t("attribute", "class"),
+      t("operator", "="), t("string", "\"title\""),
+      t("punctuation.bracket", ">"),
+      t("text", "Hello, world!"),
+      t("punctuation.bracket", "</"), t("tag", "h1"),
+      t("punctuation.bracket", ">\n    "),
+      t("comment", "<!-- count of items -->"), t("text", "\n    "),
+      t("punctuation.bracket", "<"), t("tag", "p"),
+      t("text", " "), t("attribute", "id"),
+      t("operator", "="), t("string", "\"count\""),
+      t("punctuation.bracket", ">"),
+      t("number", "42"),
+      t("punctuation.bracket", "</"), t("tag", "p"),
+      t("punctuation.bracket", ">\n  "),
+      t("punctuation.bracket", "</"), t("tag", "body"),
+      t("punctuation.bracket", ">\n"),
+      t("punctuation.bracket", "</"), t("tag", "html"),
+      t("punctuation.bracket", ">\n"),
+    ]
+  },
 
-  { tok: "keyword",  text: "const " },
-  { tok: "variable", text: "active" },
-  { tok: "operator", text: " = " },
-  { tok: "boolean",  text: "true" },
-  { tok: "punctuation.delimiter", text: ";\n" }
+  "src/styles.css": {
+    lang: "CSS",
+    tokens: [
+      t("comment", "/* Demo: theme syntax preview */"), t("text", "\n"),
+      t("tag", ":root"), t("punctuation.bracket", " {\n  "),
+      t("variable", "--accent"), t("punctuation", ": "),
+      t("constant", "#e4a91f"), t("punctuation.delimiter", ";\n"),
+      t("punctuation.bracket", "}\n\n"),
+      t("tag", ".title"), t("punctuation.bracket", " {\n  "),
+      t("property", "color"), t("punctuation", ": "),
+      t("function", "var"), t("punctuation.bracket", "("),
+      t("variable", "--accent"), t("punctuation.bracket", ")"),
+      t("punctuation.delimiter", ";\n  "),
+      t("property", "font-size"), t("punctuation", ": "),
+      t("number", "1.5"), t("type.builtin", "rem"),
+      t("punctuation.delimiter", ";\n  "),
+      t("property", "font-weight"), t("punctuation", ": "),
+      t("number", "600"), t("punctuation.delimiter", ";\n"),
+      t("punctuation.bracket", "}\n\n"),
+      t("tag", "#count"), t("punctuation", "::"),
+      t("tag", "after"), t("punctuation.bracket", " {\n  "),
+      t("property", "content"), t("punctuation", ": "),
+      t("string", "\" items\""), t("punctuation.delimiter", ";\n"),
+      t("punctuation.bracket", "}\n"),
+    ]
+  },
+
+  "src/build.sh": {
+    lang: "Shell",
+    tokens: [
+      t("comment", "#!/usr/bin/env bash\n"),
+      t("comment", "# Demo: theme syntax preview\n\n"),
+      t("function", "set"), t("text", " "),
+      t("operator", "-euo"), t("text", " "),
+      t("variable", "pipefail"), t("text", "\n\n"),
+      t("constant", "MAX_ITEMS"), t("operator", "="),
+      t("number", "42"), t("text", "\n"),
+      t("variable", "name"), t("operator", "="),
+      t("string", "\"${"), t("variable.special", "1"),
+      t("punctuation", ":-"), t("string", "world}\""),
+      t("text", "\n\n"),
+      t("keyword", "if "), t("punctuation.bracket", "[ "),
+      t("operator", "-z "), t("string", "\"$name\""),
+      t("punctuation.bracket", " ]"), t("punctuation.delimiter", "; "),
+      t("keyword", "then"), t("text", "\n  "),
+      t("function", "echo"), t("text", " "),
+      t("string", "\"Hello, stranger!\""), t("text", "\n"),
+      t("keyword", "else"), t("text", "\n  "),
+      t("function", "echo"), t("text", " "),
+      t("string", "\"Hello, $name!\""), t("text", "\n"),
+      t("keyword", "fi"), t("text", "\n"),
+    ]
+  },
+
+  "theme.json": {
+    lang: "JSON",
+    tokens: [
+      t("punctuation.bracket", "{\n  "),
+      t("property", "\"name\""), t("punctuation", ": "),
+      t("string", "\"colorful-classic\""),
+      t("punctuation.delimiter", ",\n  "),
+      t("property", "\"author\""), t("punctuation", ": "),
+      t("string", "\"pencroff\""),
+      t("punctuation.delimiter", ",\n  "),
+      t("property", "\"version\""), t("punctuation", ": "),
+      t("string", "\"0.2.0\""),
+      t("punctuation.delimiter", ",\n  "),
+      t("property", "\"enabled\""), t("punctuation", ": "),
+      t("boolean", "true"),
+      t("punctuation.delimiter", ",\n  "),
+      t("property", "\"max_items\""), t("punctuation", ": "),
+      t("number", "42"),
+      t("punctuation.delimiter", ",\n  "),
+      t("property", "\"tags\""), t("punctuation", ": "),
+      t("punctuation.bracket", "["),
+      t("string", "\"dark\""), t("punctuation.delimiter", ", "),
+      t("string", "\"classic\""), t("punctuation.delimiter", ", "),
+      t("string", "\"colorful\""),
+      t("punctuation.bracket", "]"), t("text", "\n"),
+      t("punctuation.bracket", "}\n"),
+    ]
+  },
+
+  "README.md": {
+    lang: "Markdown",
+    tokens: [
+      t("title", "# Colorful Classic"), t("text", "\n\n"),
+      t("text", "A "),
+      t("emphasis.strong", "**dark**"),
+      t("text", " theme inspired by the "),
+      t("emphasis", "_classic_"),
+      t("text", " editor palette.\n\n"),
+      t("title", "## Usage"), t("text", "\n\n"),
+      t("text.literal", "    npm install colorful-classic"),
+      t("text", "\n\n"),
+      t("text", "See "),
+      t("punctuation.special", "["),
+      t("link_text", "docs"),
+      t("punctuation.special", "]("),
+      t("link_uri", "https://example.com"),
+      t("punctuation.special", ")"),
+      t("text", " for details.\n\n"),
+      t("punctuation.list_marker", "- "),
+      t("text", "item one\n"),
+      t("punctuation.list_marker", "- "),
+      t("text", "item two\n"),
+      t("punctuation.list_marker", "- "),
+      t("text.literal", "`inline code`"),
+      t("text", "\n"),
+    ]
+  },
+};
+
+const FILE_TREE = [
+  { folder: "src/" },
+  { path: "src/index.ts",   display: "  index.ts" },
+  { path: "src/main.py",    display: "  main.py" },
+  { path: "src/lib.rs",     display: "  lib.rs" },
+  { path: "src/main.go",    display: "  main.go" },
+  { path: "src/index.html", display: "  index.html" },
+  { path: "src/styles.css", display: "  styles.css" },
+  { path: "src/build.sh",   display: "  build.sh" },
+  { path: "theme.json",     display: "theme.json" },
+  { path: "README.md",      display: "README.md" },
 ];
+
+const DEFAULT_FILE = "src/index.ts";
 
 function el(tag, attrs = {}, children = []) {
   const node = document.createElement(tag);
@@ -262,7 +559,11 @@ function swatchEl(name, value) {
 
 function renderUiMock(style) {
   const get = (k, fallback) => style[k] || fallback;
+  const syntax = style.syntax || {};
 
+  const titleLabel = el("span", {
+    style: { marginLeft: "12px", color: get("text.muted") }
+  });
   const titlebar = el("div", {
     class: "ui-titlebar",
     style: {
@@ -274,25 +575,8 @@ function renderUiMock(style) {
     el("div", { class: "dot", style: { background: "#f34f44" } }),
     el("div", { class: "dot", style: { background: "#e4a91f" } }),
     el("div", { class: "dot", style: { background: "#30be47" } }),
-    el("span", { style: { marginLeft: "12px", color: get("text.muted") }, text: "demo.ts — Colorful Classic" })
+    titleLabel
   ]);
-
-  const fileList = ["src/", "  index.ts", "  theme.ts", "  utils.ts", "package.json", "README.md"];
-  const panel = el("div", {
-    class: "ui-panel",
-    style: {
-      background: get("panel.background", get("surface.background")),
-      color: get("text"),
-      borderRight: `1px solid ${get("border")}`
-    }
-  }, fileList.map((f, i) => el("div", {
-    class: "file",
-    style: i === 1 ? {
-      background: get("element.selected"),
-      color: get("text.accent")
-    } : { color: get("text.muted") },
-    text: f
-  })));
 
   const editor = el("div", {
     class: "ui-editor",
@@ -302,17 +586,7 @@ function renderUiMock(style) {
     }
   });
 
-  const syntax = style.syntax || {};
-  for (const piece of SAMPLE_CODE) {
-    const def = syntax[piece.tok] || {};
-    const span = document.createElement("span");
-    span.textContent = piece.text;
-    if (def.color) span.style.color = def.color;
-    if (def.font_style) span.style.fontStyle = def.font_style;
-    if (def.font_weight) span.style.fontWeight = def.font_weight;
-    editor.appendChild(span);
-  }
-
+  const langLabel = el("span", { style: { marginLeft: "12px" } });
   const statusbar = el("div", {
     class: "ui-statusbar",
     style: {
@@ -322,9 +596,70 @@ function renderUiMock(style) {
     }
   }, [
     el("span", { style: { color: get("success") }, text: "● main" }),
-    el("span", { style: { marginLeft: "12px" }, text: "TypeScript" }),
-    el("span", { style: { marginLeft: "auto", color: get("text.accent") }, text: "Ln 8, Col 12" })
+    langLabel,
+    el("span", { style: { marginLeft: "auto", color: get("text.accent") }, text: "Ln 1, Col 1" })
   ]);
+
+  const fileEls = {};
+  const panelItems = FILE_TREE.map(item => {
+    if (item.folder) {
+      return el("div", {
+        class: "file folder",
+        style: { color: get("text.muted") },
+        text: item.folder
+      });
+    }
+    const fileEl = el("div", {
+      class: "file",
+      style: { color: get("text.muted") },
+      text: item.display
+    });
+    fileEl.addEventListener("click", () => selectFile(item.path));
+    fileEls[item.path] = fileEl;
+    return fileEl;
+  });
+
+  const panel = el("div", {
+    class: "ui-panel",
+    style: {
+      background: get("panel.background", get("surface.background")),
+      color: get("text"),
+      borderRight: `1px solid ${get("border")}`
+    }
+  }, panelItems);
+
+  function renderEditor(tokens) {
+    editor.textContent = "";
+    for (const piece of tokens) {
+      const def = syntax[piece.tok] || {};
+      const span = document.createElement("span");
+      span.textContent = piece.text;
+      if (def.color) span.style.color = def.color;
+      if (def.font_style) span.style.fontStyle = def.font_style;
+      if (def.font_weight) span.style.fontWeight = def.font_weight;
+      editor.appendChild(span);
+    }
+  }
+
+  function selectFile(path) {
+    const sample = SAMPLES[path];
+    if (!sample) return;
+    renderEditor(sample.tokens);
+    const basename = path.split("/").pop();
+    titleLabel.textContent = `${basename} — Colorful Classic`;
+    langLabel.textContent = sample.lang;
+    for (const [p, node] of Object.entries(fileEls)) {
+      if (p === path) {
+        node.style.background = get("element.selected");
+        node.style.color = get("text.accent");
+      } else {
+        node.style.background = "";
+        node.style.color = get("text.muted");
+      }
+    }
+  }
+
+  selectFile(DEFAULT_FILE);
 
   return el("div", { class: "ui-mock" }, [titlebar, panel, editor, statusbar]);
 }
