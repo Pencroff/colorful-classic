@@ -7,6 +7,7 @@
   </metaInfo>
 
   <colors>
+
     <option name="CARET_COLOR" value="69bfd2" />
     <option name="CARET_ROW_COLOR" value="342c22" />
     <option name="GUTTER_BACKGROUND" value="2d261e" />
@@ -14,8 +15,7 @@
     <option name="SELECTED_INDENT_GUIDE" value="50402e" />
     <option name="LINE_NUMBERS_COLOR" value="917959" />
     <option name="LINE_NUMBER_ON_CARET_ROW_COLOR" value="d6c0a2" />
-    <option name="SELECTION_BACKGROUND" value="69bfd2" />
-    <option name="SELECTION_FOREGROUND" value="d6c0a2" />
+    <option name="SELECTION_BACKGROUND" value="3c4c4b" />
     <option name="RIGHT_MARGIN_COLOR" value="342c22" />
     <option name="WHITESPACES" value="50402e" />
     <option name="TEARLINE_COLOR" value="3b2f25" />

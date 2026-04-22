@@ -27,9 +27,11 @@
     "textPlaceholder": "#917959",
     "textDisabled": "#6a563d",
     "accent": "#e4a91f",
+    "accentDim": "#50402e",
     "linkHover": "#e1bc5f",
 
     "elementBg": "#26201b",
+    "buttonBg": "#2d261e",
     "elementHover": "#342c22",
     "elementActive": "#3b2f25",
     "elementSelected": "#3b2f25",
@@ -139,18 +141,18 @@
     "Component.warningFocusColor": "warningBorder",
     "Component.focusColor": "borderFocused",
 
-    "Button.background": "elementBg",
+    "Button.background": "buttonBg",
     "Button.foreground": "text",
-    "Button.startBackground": "elementBg",
-    "Button.endBackground": "elementBg",
+    "Button.startBackground": "buttonBg",
+    "Button.endBackground": "buttonBg",
     "Button.startBorderColor": "border",
     "Button.endBorderColor": "border",
     "Button.focusedBorderColor": "borderFocused",
-    "Button.default.startBackground": "accent",
-    "Button.default.endBackground": "accent",
+    "Button.default.startBackground": "accentDim",
+    "Button.default.endBackground": "accentDim",
     "Button.default.startBorderColor": "borderFocused",
     "Button.default.endBorderColor": "borderFocused",
-    "Button.default.foreground": "bg",
+    "Button.default.foreground": "text",
     "Button.default.focusedBorderColor": "borderFocused",
     "Button.disabledBorderColor": "borderDisabled",
 
@@ -375,9 +377,9 @@
       "Checkbox.Border.Disabled.Dark": "#342c22",
       "Checkbox.Focus.Thin.Default.Dark": "#50402e",
       "Checkbox.Focus.Wide.Dark": "#50402e80",
-      "Checkbox.Foreground.Selected.Dark": "#1b1712",
+      "Checkbox.Foreground.Selected.Dark": "#d6c0a2",
       "Checkbox.Foreground.Disabled.Dark": "#6a563d",
-      "Checkbox.Background.Selected.Dark": "#e4a91f",
+      "Checkbox.Background.Selected.Dark": "#50402e",
       "Checkbox.Border.Selected.Dark": "#e4a91f"
     }
   }
