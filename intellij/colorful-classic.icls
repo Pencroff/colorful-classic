@@ -23,7 +23,7 @@
     <option name="CONSOLE_BACKGROUND_KEY" value="1b1712" />
     <option name="ADDED_LINES_COLOR" value="4dc58d" />
     <option name="MODIFIED_LINES_COLOR" value="e4a91f" />
-    <option name="DELETED_LINES_COLOR" value="f34f44" />
+    <option name="DELETED_LINES_COLOR" value="fa6a60" />
     <option name="WHITESPACES_MODIFIED_LINES_COLOR" value="e4a91f" />
     <option name="BORDER_LINES_COLOR" value="3b2f25" />
     <option name="ANNOTATIONS_COLOR" value="ab916d" />
@@ -41,13 +41,13 @@
 
     <option name="DEFAULT_LINE_COMMENT">
       <value>
-        <option name="FOREGROUND" value="808080" />
+        <option name="FOREGROUND" value="8a8278" />
         <option name="FONT_TYPE" value="2" />
       </value>
     </option>
     <option name="DEFAULT_BLOCK_COMMENT">
       <value>
-        <option name="FOREGROUND" value="808080" />
+        <option name="FOREGROUND" value="8a8278" />
         <option name="FONT_TYPE" value="2" />
       </value>
     </option>
@@ -65,19 +65,19 @@
     </option>
     <option name="DEFAULT_DOC_COMMENT_MARKUP">
       <value>
-        <option name="FOREGROUND" value="6a8759" />
+        <option name="FOREGROUND" value="629755" />
       </value>
     </option>
 
     <option name="DEFAULT_KEYWORD">
       <value>
-        <option name="FOREGROUND" value="cc7832" />
+        <option name="FOREGROUND" value="d68a40" />
         <option name="FONT_TYPE" value="1" />
       </value>
     </option>
     <option name="DEFAULT_PREDEFINED_SYMBOL">
       <value>
-        <option name="FOREGROUND" value="cc7832" />
+        <option name="FOREGROUND" value="d68a40" />
         <option name="FONT_TYPE" value="1" />
       </value>
     </option>
@@ -89,13 +89,13 @@
     </option>
     <option name="DEFAULT_VALID_STRING_ESCAPE">
       <value>
-        <option name="FOREGROUND" value="cc7832" />
+        <option name="FOREGROUND" value="d68a40" />
         <option name="FONT_TYPE" value="1" />
       </value>
     </option>
     <option name="DEFAULT_INVALID_STRING_ESCAPE">
       <value>
-        <option name="FOREGROUND" value="f34f44" />
+        <option name="FOREGROUND" value="fa6a60" />
       </value>
     </option>
 
@@ -208,13 +208,13 @@
     </option>
     <option name="DEFAULT_LABEL">
       <value>
-        <option name="FOREGROUND" value="51c688" />
+        <option name="FOREGROUND" value="4dc58d" />
       </value>
     </option>
 
     <option name="DEFAULT_OPERATION_SIGN">
       <value>
-        <option name="FOREGROUND" value="cc7832" />
+        <option name="FOREGROUND" value="d68a40" />
       </value>
     </option>
     <option name="DEFAULT_BRACES">
@@ -234,36 +234,36 @@
     </option>
     <option name="DEFAULT_DOT">
       <value>
-        <option name="FOREGROUND" value="cc7832" />
+        <option name="FOREGROUND" value="d68a40" />
       </value>
     </option>
     <option name="DEFAULT_COMMA">
       <value>
-        <option name="FOREGROUND" value="cc7832" />
+        <option name="FOREGROUND" value="d68a40" />
       </value>
     </option>
     <option name="DEFAULT_SEMICOLON">
       <value>
-        <option name="FOREGROUND" value="cc7832" />
+        <option name="FOREGROUND" value="d68a40" />
       </value>
     </option>
 
     <option name="DEFAULT_TEMPLATE_LANGUAGE_COLOR">
       <value>
-        <option name="FOREGROUND" value="30be47" />
+        <option name="FOREGROUND" value="5bc600" />
       </value>
     </option>
 
     <option name="BAD_CHARACTER">
       <value>
-        <option name="FOREGROUND" value="f34f44" />
+        <option name="FOREGROUND" value="fa6a60" />
         <option name="FONT_TYPE" value="1" />
       </value>
     </option>
     <option name="ERRORS_ATTRIBUTES">
       <value>
-        <option name="FOREGROUND" value="f34f44" />
-        <option name="EFFECT_COLOR" value="f34f44" />
+        <option name="FOREGROUND" value="fa6a60" />
+        <option name="EFFECT_COLOR" value="fa6a60" />
         <option name="EFFECT_TYPE" value="2" />
       </value>
     </option>
@@ -350,22 +350,42 @@
 
     <option name="DIFF_MODIFIED">
       <value>
-        <option name="BACKGROUND" value="e4a91f" />
+        <option name="BACKGROUND" value="5b471e" />
+      </value>
+    </option>
+    <option name="DIFF_MODIFIED_HIGHLIGHTED">
+      <value>
+        <option name="BACKGROUND" value="765a1e" />
       </value>
     </option>
     <option name="DIFF_INSERTED">
       <value>
-        <option name="BACKGROUND" value="4dc58d" />
+        <option name="BACKGROUND" value="354e3a" />
+      </value>
+    </option>
+    <option name="DIFF_INSERTED_HIGHLIGHTED">
+      <value>
+        <option name="BACKGROUND" value="3a654a" />
       </value>
     </option>
     <option name="DIFF_DELETED">
       <value>
-        <option name="BACKGROUND" value="f34f44" />
+        <option name="BACKGROUND" value="60372f" />
+      </value>
+    </option>
+    <option name="DIFF_DELETED_HIGHLIGHTED">
+      <value>
+        <option name="BACKGROUND" value="7f4138" />
       </value>
     </option>
     <option name="DIFF_CONFLICT">
       <value>
-        <option name="BACKGROUND" value="ea6a14" />
+        <option name="BACKGROUND" value="5c371c" />
+      </value>
+    </option>
+    <option name="DIFF_CONFLICT_HIGHLIGHTED">
+      <value>
+        <option name="BACKGROUND" value="78411a" />
       </value>
     </option>
 
@@ -376,12 +396,12 @@
     </option>
     <option name="CONSOLE_ERROR_OUTPUT">
       <value>
-        <option name="FOREGROUND" value="f34f44" />
+        <option name="FOREGROUND" value="fa6a60" />
       </value>
     </option>
     <option name="CONSOLE_SYSTEM_OUTPUT">
       <value>
-        <option name="FOREGROUND" value="808080" />
+        <option name="FOREGROUND" value="8a8278" />
       </value>
     </option>
     <option name="CONSOLE_USER_INPUT">
@@ -437,7 +457,7 @@
     </option>
     <option name="GO_METHOD_RECEIVER">
       <value>
-        <option name="FOREGROUND" value="ffff00" />
+        <option name="FOREGROUND" value="e6d54a" />
       </value>
     </option>
     <option name="GO_PACKAGE_EXPORTED_CONSTANT">
@@ -497,7 +517,7 @@
     </option>
     <option name="GO_STRING">
       <value>
-        <option name="FOREGROUND" value="30be47" />
+        <option name="FOREGROUND" value="5bc600" />
       </value>
     </option>
     <option name="GO_STRUCT_EXPORTED_MEMBER">
@@ -507,12 +527,12 @@
     </option>
     <option name="GO_STRUCT_LOCAL_MEMBER">
       <value>
-        <option name="FOREGROUND" value="00c62b" />
+        <option name="FOREGROUND" value="5bc600" />
       </value>
     </option>
     <option name="GO_TYPE_SPECIFICATION">
       <value>
-        <option name="FOREGROUND" value="51c688" />
+        <option name="FOREGROUND" value="4dc58d" />
       </value>
     </option>
     <option name="GO_COMMENT_REFERENCE">
