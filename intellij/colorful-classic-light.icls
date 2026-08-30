@@ -9,32 +9,32 @@
   <colors>
 
     <option name="CARET_COLOR" value="126c8a" />
-    <option name="CARET_ROW_COLOR" value="c1b4a4" />
+    <option name="CARET_ROW_COLOR" value="e8dbca" />
     <option name="GUTTER_BACKGROUND" value="ede3d6" />
-    <option name="INDENT_GUIDE" value="b29d7f" />
-    <option name="SELECTED_INDENT_GUIDE" value="948064" />
+    <option name="INDENT_GUIDE" value="e2d2be" />
+    <option name="SELECTED_INDENT_GUIDE" value="d0bea8" />
     <option name="LINE_NUMBERS_COLOR" value="705b3c" />
-    <option name="LINE_NUMBER_ON_CARET_ROW_COLOR" value="4a3821" />
+    <option name="LINE_NUMBER_ON_CARET_ROW_COLOR" value="35312b" />
     <option name="SELECTION_BACKGROUND" value="d0bea8" />
     <option name="SELECTION_FOREGROUND" value="35312b" />
-    <option name="RIGHT_MARGIN_COLOR" value="c1b4a4" />
-    <option name="WHITESPACES" value="948064" />
-    <option name="TEARLINE_COLOR" value="b29d7f" />
+    <option name="RIGHT_MARGIN_COLOR" value="e8dbca" />
+    <option name="WHITESPACES" value="d0bea8" />
+    <option name="TEARLINE_COLOR" value="e2d2be" />
     <option name="CONSOLE_BACKGROUND_KEY" value="ddd1c0" />
     <option name="ADDED_LINES_COLOR" value="0d7d6c" />
     <option name="MODIFIED_LINES_COLOR" value="895a06" />
     <option name="DELETED_LINES_COLOR" value="cb1025" />
     <option name="WHITESPACES_MODIFIED_LINES_COLOR" value="895a06" />
-    <option name="BORDER_LINES_COLOR" value="b29d7f" />
+    <option name="BORDER_LINES_COLOR" value="e2d2be" />
     <option name="ANNOTATIONS_COLOR" value="88704d" />
-    <option name="VISUAL_INDENT_GUIDE" value="b29d7f" />
-    <option name="NOTIFICATION_BACKGROUND" value="ddd1c0" />
+    <option name="VISUAL_INDENT_GUIDE" value="e2d2be" />
+    <option name="NOTIFICATION_BACKGROUND" value="ebdecd" />
   </colors>
 
   <attributes>
     <option name="TEXT">
       <value>
-        <option name="FOREGROUND" value="4a3821" />
+        <option name="FOREGROUND" value="35312b" />
         <option name="BACKGROUND" value="ede3d6" />
       </value>
     </option>
@@ -391,7 +391,7 @@
 
     <option name="CONSOLE_NORMAL_OUTPUT">
       <value>
-        <option name="FOREGROUND" value="4a3821" />
+        <option name="FOREGROUND" value="35312b" />
       </value>
     </option>
     <option name="CONSOLE_ERROR_OUTPUT">
