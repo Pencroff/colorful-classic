@@ -11,6 +11,8 @@ mkdir -p "$STAGE/META-INF" "$STAGE/themes" "$STAGE/colorscheme"
 cp "$HERE/META-INF/plugin.xml"            "$STAGE/META-INF/plugin.xml"
 cp "$HERE/${NAME}.theme.json"             "$STAGE/themes/${NAME}.theme.json"
 cp "$HERE/${NAME}.icls"                   "$STAGE/colorscheme/${NAME}.xml"
+cp "$HERE/${NAME}-light.theme.json"       "$STAGE/themes/${NAME}-light.theme.json"
+cp "$HERE/${NAME}-light.icls"             "$STAGE/colorscheme/${NAME}-light.xml"
 
 rm -f "$OUT"
 (cd "$STAGE" && zip -qr "$OUT" META-INF themes colorscheme)

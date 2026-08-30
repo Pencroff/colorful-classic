@@ -1,12 +1,13 @@
 <idea-plugin>
   <id>com.pencroff.colorful-classic</id>
   <name>Colorful Classic</name>
-  <version>0.2.5</version>
+  <version>0.3.0</version>
   <vendor email="" url="https://github.com/Pencroff">Pencroff</vendor>
   <category>Themes</category>
   <description><![CDATA[
-    Colorful Classic Dark — an IntelliJ port of the Zed "Colorful Classic" theme.
-    Ships a Darcula-based editor color scheme and a matching UI theme.
+    Colorful Classic — an IntelliJ port of the Zed "Colorful Classic" theme.
+    Ships Dark and Light variants, each with an editor color scheme and a
+    matching UI theme.
   ]]></description>
 
   <idea-version since-build="232" />
@@ -16,5 +17,7 @@
   <extensions defaultExtensionNs="com.intellij">
     <themeProvider id="colorful-classic-dark" path="/themes/colorful-classic.theme.json" />
     <bundledColorScheme path="/colorscheme/colorful-classic" />
+    <themeProvider id="colorful-classic-light" path="/themes/colorful-classic-light.theme.json" />
+    <bundledColorScheme path="/colorscheme/colorful-classic-light" />
   </extensions>
 </idea-plugin>
