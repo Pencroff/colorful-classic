@@ -12,8 +12,12 @@
     --text: #ddd;
     --text-muted: #888;
     --accent: #e4a91f;
+    --on-accent: #111;
+    --checker: #444;
+    --chip-border: rgba(255,255,255,0.12);
   }
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
   html, body {
     margin: 0; padding: 0;
     background: var(--background);
@@ -21,14 +25,71 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     font-size: 14px;
     min-height: 100vh;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
   header {
     padding: 24px 32px;
     background: var(--surface);
     border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
   }
+  header .titles { flex: 1 1 260px; min-width: 0; }
   header h1 { margin: 0 0 4px; font-size: 22px; color: var(--accent); }
   header .meta { color: var(--text-muted); font-size: 13px; }
+
+  .switcher {
+    display: inline-flex;
+    gap: 3px;
+    padding: 3px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--elevated);
+  }
+  .switcher button {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--text-muted);
+    font: inherit;
+    font-size: 12px;
+    line-height: 1;
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .switcher button:hover { color: var(--text); }
+  .switcher button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .switcher button[aria-pressed="true"] {
+    background: var(--accent);
+    color: var(--on-accent);
+    font-weight: 600;
+  }
+  .switcher .bullet {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    border: 1px solid var(--chip-border);
+    flex-shrink: 0;
+  }
+  .switch-hint {
+    color: var(--text-muted);
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .switch-hint kbd {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 5px;
+    background: var(--elevated);
+  }
 
   main { padding: 24px 32px; display: flex; flex-direction: column; gap: 32px; }
 
@@ -79,13 +140,13 @@
   .swatch .chip {
     width: 28px; height: 28px;
     border-radius: 4px;
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid var(--chip-border);
     flex-shrink: 0;
     background-image:
-      linear-gradient(45deg, #444 25%, transparent 25%),
-      linear-gradient(-45deg, #444 25%, transparent 25%),
-      linear-gradient(45deg, transparent 75%, #444 75%),
-      linear-gradient(-45deg, transparent 75%, #444 75%);
+      linear-gradient(45deg, var(--checker) 25%, transparent 25%),
+      linear-gradient(-45deg, var(--checker) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, var(--checker) 75%),
+      linear-gradient(-45deg, transparent 75%, var(--checker) 75%);
     background-size: 8px 8px;
     background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
   }
@@ -114,7 +175,7 @@
   .accent-pill {
     width: 44px; height: 44px;
     border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0.1);
+    border: 2px solid var(--chip-border);
   }
 
   .ui-mock {
@@ -173,8 +234,11 @@
 </head>
 <body>
 <header>
-  <h1 id="theme-name">Loading…</h1>
-  <div class="meta" id="theme-meta"></div>
+  <div class="titles">
+    <h1 id="theme-name">Loading…</h1>
+    <div class="meta" id="theme-meta"></div>
+  </div>
+  <div id="switcher-slot"></div>
 </header>
 <main id="main"></main>
 
@@ -534,6 +598,18 @@ const FILE_TREE = [
 
 const DEFAULT_FILE = "src/index.ts";
 
+// The chosen file is shared by every theme variant, so switching themes keeps your place.
+// Each mock registers its own selector; a click broadcasts to all of them, including the
+// hidden ones, so the variant you switch to is already showing the same file.
+let currentFile = DEFAULT_FILE;
+const fileSelectors = [];
+
+function selectFileEverywhere(path) {
+  if (!SAMPLES[path]) return;
+  currentFile = path;
+  for (const select of fileSelectors) select(path);
+}
+
 function el(tag, attrs = {}, children = []) {
   const node = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs)) {
@@ -557,7 +633,7 @@ function swatchEl(name, value) {
   return el("div", { class: "swatch" }, [chip, label]);
 }
 
-function renderUiMock(style) {
+function renderUiMock(style, themeName) {
   const get = (k, fallback) => style[k] || fallback;
   const syntax = style.syntax || {};
 
@@ -614,7 +690,7 @@ function renderUiMock(style) {
       style: { color: get("text.muted") },
       text: item.display
     });
-    fileEl.addEventListener("click", () => selectFile(item.path));
+    fileEl.addEventListener("click", () => selectFileEverywhere(item.path));
     fileEls[item.path] = fileEl;
     return fileEl;
   });
@@ -646,7 +722,7 @@ function renderUiMock(style) {
     if (!sample) return;
     renderEditor(sample.tokens);
     const basename = path.split("/").pop();
-    titleLabel.textContent = `${basename} — Colorful Classic`;
+    titleLabel.textContent = `${basename} — ${themeName}`;
     langLabel.textContent = sample.lang;
     for (const [p, node] of Object.entries(fileEls)) {
       if (p === path) {
@@ -659,7 +735,8 @@ function renderUiMock(style) {
     }
   }
 
-  selectFile(DEFAULT_FILE);
+  fileSelectors.push(selectFile);
+  selectFile(currentFile);
 
   return el("div", { class: "ui-mock" }, [titlebar, panel, editor, statusbar]);
 }
@@ -673,7 +750,7 @@ function renderTheme(theme) {
 
   const uiSection = el("div", { class: "section" }, [
     el("h3", { text: "Editor & UI Preview" }),
-    renderUiMock(style)
+    renderUiMock(style, theme.name)
   ]);
   block.appendChild(uiSection);
 
@@ -724,6 +801,83 @@ function renderTheme(theme) {
   return block;
 }
 
+const STORAGE_KEY = "colorful-classic-demo:variant";
+
+function applyChrome(theme) {
+  const s = theme.style || {};
+  const light = (theme.appearance || "dark") === "light";
+  const set = (k, v) => document.documentElement.style.setProperty(k, v);
+  set("--background", s["background"] || "#111");
+  set("--surface", s["surface.background"] || "#1a1a1a");
+  set("--elevated", s["elevated_surface.background"] || "#1f1f1f");
+  set("--border", s["border"] || "#333");
+  set("--text", s["text"] || "#ddd");
+  set("--text-muted", s["text.muted"] || "#888");
+  set("--accent", s["text.accent"] || "#e4a91f");
+  set("--on-accent", s["background"] || "#111");
+  set("--checker", light ? "#cbbda6" : "#444");
+  set("--chip-border", light ? "rgba(0,0,0,0.18)" : "rgba(255,255,255,0.12)");
+  document.documentElement.style.colorScheme = light ? "light" : "dark";
+}
+
+function variantLabel(theme, familyName) {
+  const name = theme.name || "";
+  const trimmed = familyName && name.startsWith(familyName)
+    ? name.slice(familyName.length).trim()
+    : "";
+  if (trimmed) return trimmed;
+  const appearance = theme.appearance || "";
+  return appearance ? appearance[0].toUpperCase() + appearance.slice(1) : name || "Variant";
+}
+
+function buildSwitcher(themes, familyName, onSelect) {
+  const buttons = themes.map((theme, i) => {
+    const btn = el("button", {
+      type: "button",
+      "aria-pressed": "false",
+      title: theme.name || ""
+    }, [
+      el("span", {
+        class: "bullet",
+        style: { background: theme.style?.["editor.background"] || "#000" }
+      }),
+      el("span", { text: variantLabel(theme, familyName) })
+    ]);
+    btn.addEventListener("click", () => onSelect(i));
+    return btn;
+  });
+  const box = el("div", {
+    class: "switcher",
+    role: "group",
+    "aria-label": "Theme variant"
+  }, buttons);
+  const wrap = el("div", {
+    style: { display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }
+  }, [
+    box,
+    themes.length > 1
+      ? el("span", { class: "switch-hint" }, [
+          el("kbd", { text: "T" }),
+          document.createTextNode(" to toggle")
+        ])
+      : null
+  ]);
+  return { wrap, buttons };
+}
+
+function initialIndex(themes) {
+  let stored = null;
+  try { stored = localStorage.getItem(STORAGE_KEY); } catch (e) { /* private mode */ }
+  const byName = themes.findIndex(t => t.name === stored);
+  if (byName >= 0) return byName;
+  const prefersLight = window.matchMedia
+    && window.matchMedia("(prefers-color-scheme: light)").matches;
+  const byAppearance = themes.findIndex(
+    t => (t.appearance || "dark") === (prefersLight ? "light" : "dark")
+  );
+  return byAppearance >= 0 ? byAppearance : 0;
+}
+
 async function main() {
   const main = document.getElementById("main");
   try {
@@ -731,14 +885,41 @@ async function main() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
 
+    const themes = data.themes || [];
+
     document.getElementById("theme-name").textContent = data.name || "Theme";
     document.getElementById("theme-meta").textContent =
-      `by ${data.author || "unknown"} · ${data.themes?.length || 0} variant(s) · schema ${data["$schema"] || "—"}`;
+      `by ${data.author || "unknown"} · ${themes.length} variant(s) · schema ${data["$schema"] || "—"}`;
     document.title = `${data.name} — Theme Demo`;
 
-    for (const theme of data.themes || []) {
-      main.appendChild(renderTheme(theme));
-    }
+    const blocks = themes.map(theme => {
+      const block = renderTheme(theme);
+      main.appendChild(block);
+      return block;
+    });
+
+    let current = -1;
+    const select = (i) => {
+      if (i < 0 || i >= themes.length || i === current) return;
+      current = i;
+      blocks.forEach((block, j) => { block.hidden = j !== i; });
+      buttons.forEach((btn, j) => btn.setAttribute("aria-pressed", String(j === i)));
+      applyChrome(themes[i]);
+      try { localStorage.setItem(STORAGE_KEY, themes[i].name); } catch (e) { /* ignore */ }
+    };
+
+    const { wrap, buttons } = buildSwitcher(themes, data.name, select);
+    document.getElementById("switcher-slot").appendChild(wrap);
+
+    document.addEventListener("keydown", (ev) => {
+      if (ev.key !== "t" && ev.key !== "T") return;
+      if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+      const tag = (ev.target.tagName || "").toLowerCase();
+      if (tag === "input" || tag === "textarea" || ev.target.isContentEditable) return;
+      select((current + 1) % themes.length);
+    });
+
+    if (themes.length) select(initialIndex(themes));
   } catch (err) {
     main.appendChild(el("div", {
       class: "error-msg",
