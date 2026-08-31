@@ -23,7 +23,7 @@ const server = Bun.serve({
   async fetch(req) {
     const url = new URL(req.url);
     let pathname = decodeURIComponent(url.pathname);
-    if (pathname === "/") pathname = "/demo.html";
+    if (pathname === "/") pathname = "/index.html";
 
     const safe = normalize(pathname).replace(/^(\.\.[/\\])+/, "");
     const fullPath = join(ROOT, safe);
