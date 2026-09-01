@@ -58,9 +58,9 @@
     "deletedBg": "#cb102519",
     "renamed": "#107398",
     "conflict": "#a24c06",
-    "ignored": "#8e7a5e",
-    "ignoredBg": "#ebe3d9",
-    "hidden": "#8e7a5e"
+    "ignored": "#7a6749",
+    "ignoredBg": "#d8cbb5",
+    "hidden": "#7a6749"
   },
   "ui": {
     "*": {
