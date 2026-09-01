@@ -58,8 +58,9 @@
     "deletedBg": "#cb102519",
     "renamed": "#107398",
     "conflict": "#a24c06",
-    "ignored": "#a79377",
-    "hidden": "#a79377"
+    "ignored": "#8e7a5e",
+    "ignoredBg": "#ebe3d9",
+    "hidden": "#8e7a5e"
   },
   "ui": {
     "*": {
@@ -280,7 +281,7 @@
     "VersionControl.GitLog.headIconColor": "accent",
     "VersionControl.Log.Commit.currentBranchBackground": "elementHover",
     "FileColor.Green": "createdBg",
-    "FileColor.Yellow": "modifiedBg",
+    "FileColor.Yellow": "ignoredBg",
     "FileColor.Red": "deletedBg",
     "FileColor.Blue": "infoBg",
     "FileColor.Violet": "#5e58b219",

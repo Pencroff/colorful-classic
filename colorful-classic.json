@@ -119,11 +119,11 @@
 				"renamed.background": "#4cb2d019",
 				"renamed.border": "#4096b880",
 
-				"hidden": "#6a563d",
-				"hidden.background": "#6a563d19",
+				"hidden": "#8a7456",
+				"hidden.background": "#8a745619",
 				"hidden.border": "#50402e80",
-				"ignored": "#6a563d",
-				"ignored.background": "#6a563d19",
+				"ignored": "#8a7456",
+				"ignored.background": "#00000000",
 				"ignored.border": "#50402e80",
 
 				"predictive": "#6a563d",
@@ -503,11 +503,11 @@
 				"renamed.background": "#126c8a19",
 				"renamed.border": "#126c8a80",
 
-				"hidden": "#8e7a5e",
-				"hidden.background": "#a8947819",
+				"hidden": "#816f56",
+				"hidden.background": "#816f5619",
 				"hidden.border": "#a8947880",
-				"ignored": "#8e7a5e",
-				"ignored.background": "#a8947819",
+				"ignored": "#816f56",
+				"ignored.background": "#00000000",
 				"ignored.border": "#a8947880",
 
 				"predictive": "#8e7a5e",

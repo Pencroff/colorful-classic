@@ -29,6 +29,21 @@
     <option name="ANNOTATIONS_COLOR" value="ab916d" />
     <option name="VISUAL_INDENT_GUIDE" value="3b2f25" />
     <option name="NOTIFICATION_BACKGROUND" value="29231d" />
+
+    <option name="FILESTATUS_ADDED" value="4dc58d" />
+    <option name="FILESTATUS_MODIFIED" value="e4a91f" />
+    <option name="FILESTATUS_DELETED" value="fa6a60" />
+    <option name="FILESTATUS_DELETED_FROM_FS" value="fa6a60" />
+    <option name="FILESTATUS_MERGED" value="4cb2d0" />
+    <option name="FILESTATUS_SWITCHED" value="4cb2d0" />
+    <option name="FILESTATUS_HIJACKED" value="ea6a14" />
+    <option name="FILESTATUS_OBSOLETE" value="ab916d" />
+    <option name="FILESTATUS_SUPPRESSED" value="ab916d" />
+    <option name="FILESTATUS_UNKNOWN" value="7d6749" />
+    <option name="FILESTATUS_IDEA_FILESTATUS_IGNORED" value="7d6749" />
+    <option name="FILESTATUS_IDEA_FILESTATUS_MERGED_WITH_CONFLICTS" value="ea6a14" />
+    <option name="FILESTATUS_IDEA_FILESTATUS_MERGED_WITH_BOTH_CONFLICTS" value="ea6a14" />
+    <option name="FILESTATUS_IDEA_FILESTATUS_MERGED_WITH_PROPERTY_CONFLICTS" value="ea6a14" />
   </colors>
 
   <attributes>
