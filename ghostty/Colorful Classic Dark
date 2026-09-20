@@ -1,0 +1,26 @@
+# Colorful Classic Dark
+# Ghostty theme generated from the terminal.* section of colorful-classic.json
+
+background = #1b1712
+foreground = #d6c0a2
+cursor-color = #69bfd2
+cursor-text = #1b1712
+selection-background = #2f4142
+selection-foreground = #d6c0a2
+
+palette = 0=#1b1712
+palette = 1=#fa6a60
+palette = 2=#5bc600
+palette = 3=#e4a91f
+palette = 4=#4cb2d0
+palette = 5=#8986d9
+palette = 6=#69bfd2
+palette = 7=#d6c0a2
+palette = 8=#6a563d
+palette = 9=#fa8479
+palette = 10=#5bc600
+palette = 11=#e1bc5f
+palette = 12=#69bfd2
+palette = 13=#be93d0
+palette = 14=#2ce7ac
+palette = 15=#ebd9c6
